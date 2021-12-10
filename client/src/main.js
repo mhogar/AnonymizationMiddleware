@@ -12,6 +12,11 @@ const apolloClient = new ApolloClient({
     link: httpLink,
     cache: new InMemoryCache(),
     connectToDevTools: true,
+    defaultOptions: {
+        query: {
+            fetchPolicy: 'no-cache'
+        }
+    }
 })
   
 const apolloProvider = createApolloProvider({

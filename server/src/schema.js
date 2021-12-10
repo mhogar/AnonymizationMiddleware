@@ -2,7 +2,9 @@ const { privacyLogic } = require('./logic')
 const schemas = require('./schemas.json')
 
 let queryTypeDefs = ''
-let queryResolvers = {}
+let queryResolvers = {
+    getPrivacyLevel: (_, {}, ctx) => ctx.privacyLevel
+}
 
 let userTypeDefs = ''
 let userResolvers = {}
@@ -12,13 +14,13 @@ for (const [key, schema] of Object.entries(schemas)) {
     queryTypeDefs += `${queryKey}(val: String!): [User]\n`
     queryResolvers[queryKey] = (_, { val }, ctx) => {
         if (ctx.privacyLevel < schema.privacyLevel) {
-            throw Error("Insufficient privacy level for query.")
+            throw Error(`Insufficient privacy clearance for query (min required ${schema.privacyLevel})`)
         }
         return ctx.users.filter((user) => user[key] === val)
     }
 
     userTypeDefs += `${key}: String\n`
-    userResolvers[key] = (obj, _, ctx) => {
+    userResolvers[key] = (obj, {}, ctx) => {
         return privacyLogic.getString(ctx.privacyLevel, obj[key], schema.privacyLevel, schema.format)
     }
 }
@@ -26,6 +28,7 @@ for (const [key, schema] of Object.entries(schemas)) {
 module.exports = {
     typeDefs: `
         type Query {
+            getPrivacyLevel: Int
             ${queryTypeDefs}
         }
         
@@ -41,6 +44,7 @@ module.exports = {
         Query: queryResolvers,
         Mutation: {
             setPrivacyLevel(_, { level }, ctx) {
+                console.log('Privacy Level Set:', level)
                 ctx.privacyLevel = level
                 return level
             }

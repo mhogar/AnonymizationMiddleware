@@ -1,7 +1,6 @@
 <template>
-<div class="ui basic segment">
-    <div v-if="isLoading" class="ui active loader"></div>
-    <slot v-else />
+<div :class="'ui basic segment' + loadingClass">
+    <slot />
 </div>
 </template>
 
@@ -9,6 +8,11 @@
 export default {
     props: {
         isLoading: Boolean
+    },
+    computed: {
+        loadingClass() {
+            return this.isLoading ? ' loading' : ''
+        }
     }
 }
 </script>

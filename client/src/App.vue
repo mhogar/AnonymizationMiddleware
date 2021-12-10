@@ -1,28 +1,37 @@
 <template>
 <div class="ui container">
-    <Alert ref="alert" />
-    <div class="ui center aligned basic segment">
-        <h1 class="ui header">User Database Search</h1>
-        <form class="ui form">
-            <div class="fields">
-                <div class="three wide field">
-                    <select v-model="queryField">
-                        <option value="ID">ID</option>
-                        <option value="FirstName">First Name</option>
-                        <option value="Gender">Gender</option>
-                    </select>
-                </div>
-                <div class="eleven wide field">
-                    <input type="text" v-model="queryValue">
-                </div>
-                <div class="two wide field">
-                    <button type="submit" :class="'ui large primary button' + searchDisabledClass" @click.prevent="getUsers">
-                        Search
-                    </button>
-                </div>
+    <h1 class="ui center aligned header">
+        User Database Search
+        <div class="sub header">Privacy by Design Demo</div>
+    </h1>
+    <form :class="'ui large form' + Class">
+        <div class="field">
+            <label>Privacy Clearance Level</label>
+            <select @change="updatePrivacyLevel" v-model="privacyLevel">
+                <option v-for="index in 6" :key="index" :value="index-1">Level {{index-1}}</option>
+            </select>
+        </div>
+    </form>
+    <form class="ui large form">
+        <div class="fields">
+            <div class="four wide field">
+                <label>Field</label>
+                <select v-model="queryField">
+                    <option value="ID">ID</option>
+                    <option value="FirstName">First Name</option>
+                    <option value="Gender">Gender</option>
+                </select>
             </div>
-        </form>
-    </div>
+            <div class="twelve wide field">
+                <label>Value</label>
+                <input type="text" v-model="queryValue">
+            </div>
+        </div>
+        <button type="submit" :class="'ui primary button' + searchDisabledClass" @click.prevent="getUsers">
+            Search
+        </button>
+    </form>
+    <Alert ref="alert" />
     <div class="ui divider"></div>
     <LoadingSegment v-if="users" :isLoading="usersQueryLoading">
         <TabMenu :tabs="tabs" @selected-tab-changed="selectedTabChanged" />
@@ -57,6 +66,8 @@ export default {
         return {
             tabs: ['Raw', 'Parsed'],
             selectedTab: '',
+            privacyLevelFormLoading: false,
+            privacyLevel: 0,
             usersQueryLoading: false,
             users: null,
             queryField: 'ID',
@@ -65,6 +76,9 @@ export default {
     },
     components: {
         Alert, TabMenu, LoadingSegment
+    },
+    mounted() {
+        this.getPrivacyLevel()
     },
     computed: {
         usersRaw() {
@@ -84,6 +98,9 @@ export default {
         },
         searchDisabledClass() {
             return this.canSearch ? '' : ' disabled'
+        },
+        Class() {
+            return this.privacyLevelFormLoading ? ' loading' : ''
         }
     },
     methods: {
@@ -99,30 +116,67 @@ export default {
         selectedTabChanged(tab) {
             this.selectedTab = tab
         },
+        getPrivacyLevel() {
+            this.privacyLevelFormLoading = true
+            this.$apollo.query({
+                query: gql`
+                    query GetPrivacyLevel {
+                        level: getPrivacyLevel
+                    }
+                `
+            })
+            .then(res => {
+                this.privacyLevel = res.data.level
+            })
+            .then(() => {
+                this.privacyLevelFormLoading = false
+            })
+        },
+        updatePrivacyLevel() {
+            this.privacyLevelFormLoading = true
+            this.$apollo.mutate({
+                mutation: gql`
+                    mutation SetPrivacyLevel($level: Int!) {
+                        setPrivacyLevel(level: $level)
+                    }
+                `,
+                variables: {
+                    level: parseInt(this.privacyLevel)
+                }
+            })
+            .then(() => {})
+            .then(() => {
+                this.privacyLevelFormLoading = false
+            })
+        },
         getUsers() {
             if (!this.canSearch) {
                 return
             }
 
+            this.clearAlert()
             this.usersQueryLoading = true
+
             this.$apollo.query({
-                query: gql`query GetUser($val: String!) {
-                    users: usersBy${this.queryField}(val: $val) {
-                        ID
-                        FirstName
-                        LastName
-                        Email
-                        Street
-                        City
-                        Province
-                        PostalCode
-                        DateOfBirth
-                        Gender
-                        PhoneNumber
-                        SIN
-                        CreditCard
+                query: gql`
+                    query GetUser($val: String!) {
+                        users: usersBy${this.queryField}(val: $val) {
+                            ID
+                            FirstName
+                            LastName
+                            Email
+                            Street
+                            City
+                            Province
+                            PostalCode
+                            DateOfBirth
+                            Gender
+                            PhoneNumber
+                            SIN
+                            CreditCard
+                        }
                     }
-                }`,
+                `,
                 variables: {
                     val: this.queryValue
                 }
@@ -148,8 +202,8 @@ body {
 </style>
 
 <style scoped>
-.ui.header {
-    margin-bottom: 2rem;
+.ui.form {
+    padding-bottom: 3rem;
 }
 
 .ui.raw.text.segment {
