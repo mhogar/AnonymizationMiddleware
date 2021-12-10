@@ -9,12 +9,12 @@ let userResolvers = {}
 
 for (const [key, schema] of Object.entries(schemas)) {
     const queryKey = `usersBy${key}`
-    queryTypeDefs += `${queryKey}(val: String!): User\n`
+    queryTypeDefs += `${queryKey}(val: String!): [User]\n`
     queryResolvers[queryKey] = (_, { val }, ctx) => {
         if (ctx.privacyLevel < schema.privacyLevel) {
             throw Error("Insufficient privacy level for query.")
         }
-        return ctx.users.find((user) => user[key] === val)
+        return ctx.users.filter((user) => user[key] === val)
     }
 
     userTypeDefs += `${key}: String\n`

@@ -10,7 +10,7 @@
 export default {
     data() {
         return {
-            selectedTabIndex: 1
+            selectedTabIndex: 0
         }
     },
     props: {

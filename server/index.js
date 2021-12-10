@@ -7,7 +7,7 @@ const server = new GraphQLServer({
     resolvers,
     context: {
         users,
-        privacyLevel: 0
+        privacyLevel: 3
     }
 })
 
