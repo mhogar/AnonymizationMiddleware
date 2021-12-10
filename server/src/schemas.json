@@ -36,7 +36,7 @@
     },
     "Gender": {
         "privacyLevel": 1,
-        "format": "%s[M,F]"
+        "format": "%s[M,F,O]"
     },
     "PhoneNumber": {
         "privacyLevel": 3,

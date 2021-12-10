@@ -22,7 +22,17 @@
                     <select v-model="queryField">
                         <option value="ID">ID</option>
                         <option value="FirstName">First Name</option>
+                        <option value="LastName">Last Name</option>
+                        <option value="Email">Email</option>
+                        <option value="Street">Street</option>
+                        <option value="City">City</option>
+                        <option value="Province">Province</option>
+                        <option value="PostalCode">Postal Code</option>
+                        <option value="DateOfBirth">Date of Birth</option>
                         <option value="Gender">Gender</option>
+                        <option value="PhoneNumber">Phone Number</option>
+                        <option value="SIN">SIN</option>
+                        <option value="CreditCard">Credit Card</option>
                     </select>
                 </div>
                 <div class="twelve wide field">
