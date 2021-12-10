@@ -1,0 +1,53 @@
+{
+    "ID": {
+        "privacyLevel": 0
+    },
+    "FirstName": {
+        "privacyLevel": 1,
+        "format": "%C%c4"
+    },
+    "LastName": {
+        "privacyLevel": 1,
+        "format": "%C%c4"
+    },
+    "Email": {
+        "privacyLevel": 3,
+        "format": "%c5@email.%s[com,ca]"
+    },
+    "Street": {
+        "privacyLevel": 3,
+        "format": "%d3 %C%c4 %s[St,Dr,Ave]."
+    },
+    "City": {
+        "privacyLevel": 3,
+        "format": "%C%c4"
+    },
+    "Province": {
+        "privacyLevel": 3,
+        "format": "%s[NF,NS,NV,PE,QC,ON,MB,SK,AB,BC,YT,NT,NU]"
+    },
+    "PostalCode": {
+        "privacyLevel": 3,
+        "format": "%C%d%C %d%C%d"
+    },
+    "DateOfBirth": {
+        "privacyLevel": 2,
+        "format": "%d[1950-2020]-%d[1-12]-%d[1-31]"
+    },
+    "Gender": {
+        "privacyLevel": 1,
+        "format": "%s[M,F]"
+    },
+    "PhoneNumber": {
+        "privacyLevel": 3,
+        "format": "(%d3)-%d3-%d4"
+    },
+    "SIN": {
+        "privacyLevel": 4,
+        "format": "%d3 %d3 %d3"
+    },
+    "CreditCard": {
+        "privacyLevel": 5,
+        "format": "%d4"
+    }
+}

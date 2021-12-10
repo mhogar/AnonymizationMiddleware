@@ -1,0 +1,17 @@
+[
+    {
+        "ID": "1000",
+        "FirstName": "Bob",
+        "LastName": "ADobDob",
+        "Email": "bob@gmail.ca",
+        "Street": "101 Somewhere St.",
+        "City": "CityVile",
+        "Province": "ON",
+        "PostalCode": "A1B 2C3",
+        "DateOfBirth": "2000-01-01",
+        "Gender": "M",
+        "PhoneNumber": "123-456-7890",
+        "SIN": "111 111 111",
+        "CreditCard": "1234"
+    }
+]
