@@ -4,33 +4,37 @@
         User Database Search
         <div class="sub header">Privacy by Design Demo</div>
     </h1>
-    <form :class="'ui large form' + Class">
-        <div class="field">
-            <label>Privacy Clearance Level</label>
-            <select @change="updatePrivacyLevel" v-model="privacyLevel">
-                <option v-for="index in 6" :key="index" :value="index-1">Level {{index-1}}</option>
-            </select>
-        </div>
-    </form>
-    <form class="ui large form">
-        <div class="fields">
-            <div class="four wide field">
-                <label>Field</label>
-                <select v-model="queryField">
-                    <option value="ID">ID</option>
-                    <option value="FirstName">First Name</option>
-                    <option value="Gender">Gender</option>
+    <LoadingSegment :isLoading="privacyLevelLoading">
+        <form class="ui large form">
+            <div class="field">
+                <label>Privacy Clearance Level</label>
+                <select @change="updatePrivacyLevel" v-model="privacyLevel">
+                    <option v-for="index in 6" :key="index" :value="index-1">Level {{index-1}}</option>
                 </select>
             </div>
-            <div class="twelve wide field">
-                <label>Value</label>
-                <input type="text" v-model="queryValue">
+        </form>
+    </LoadingSegment>
+    <div class="ui basic segment">
+        <form class="ui large form">
+            <div class="fields">
+                <div class="four wide field">
+                    <label>Field</label>
+                    <select v-model="queryField">
+                        <option value="ID">ID</option>
+                        <option value="FirstName">First Name</option>
+                        <option value="Gender">Gender</option>
+                    </select>
+                </div>
+                <div class="twelve wide field">
+                    <label>Value</label>
+                    <input type="text" v-model="queryValue">
+                </div>
             </div>
-        </div>
-        <button type="submit" :class="'ui primary button' + searchDisabledClass" @click.prevent="getUsers">
-            Search
-        </button>
-    </form>
+            <button type="submit" :class="'ui primary button' + searchDisabledClass" @click.prevent="getUsers">
+                Search
+            </button>
+        </form>
+    </div>
     <Alert ref="alert" />
     <div class="ui divider"></div>
     <LoadingSegment v-if="users" :isLoading="usersQueryLoading">
@@ -66,7 +70,7 @@ export default {
         return {
             tabs: ['Raw', 'Parsed'],
             selectedTab: '',
-            privacyLevelFormLoading: false,
+            privacyLevelLoading: false,
             privacyLevel: 0,
             usersQueryLoading: false,
             users: null,
@@ -98,9 +102,6 @@ export default {
         },
         searchDisabledClass() {
             return this.canSearch ? '' : ' disabled'
-        },
-        Class() {
-            return this.privacyLevelFormLoading ? ' loading' : ''
         }
     },
     methods: {
@@ -117,7 +118,7 @@ export default {
             this.selectedTab = tab
         },
         getPrivacyLevel() {
-            this.privacyLevelFormLoading = true
+            this.privacyLevelLoading = true
             this.$apollo.query({
                 query: gql`
                     query GetPrivacyLevel {
@@ -129,11 +130,11 @@ export default {
                 this.privacyLevel = res.data.level
             })
             .then(() => {
-                this.privacyLevelFormLoading = false
+                this.privacyLevelLoading = false
             })
         },
         updatePrivacyLevel() {
-            this.privacyLevelFormLoading = true
+            this.privacyLevelLoading = true
             this.$apollo.mutate({
                 mutation: gql`
                     mutation SetPrivacyLevel($level: Int!) {
@@ -146,7 +147,7 @@ export default {
             })
             .then(() => {})
             .then(() => {
-                this.privacyLevelFormLoading = false
+                this.privacyLevelLoading = false
             })
         },
         getUsers() {
