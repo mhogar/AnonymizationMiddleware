@@ -43,7 +43,7 @@ function genStringWithFormat(format) {
 }
 
 const privacyLogic = {
-    getString(privacyLevel, str, minPrivacyLevel, format) {
+    scrubString(privacyLevel, str, minPrivacyLevel, format) {
         return privacyLevel < minPrivacyLevel ? '*' + genStringWithFormat(format) : str
     }
 }

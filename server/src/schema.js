@@ -21,7 +21,7 @@ for (const [key, schema] of Object.entries(schemas)) {
 
     userTypeDefs += `${key}: String\n`
     userResolvers[key] = (obj, {}, ctx) => {
-        return privacyLogic.getString(ctx.privacyLevel, obj[key], schema.privacyLevel, schema.format)
+        return privacyLogic.scrubString(ctx.privacyLevel, obj[key], schema.privacyLevel, schema.format)
     }
 }
 

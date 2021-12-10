@@ -16,7 +16,7 @@
     },
     "Street": {
         "privacyLevel": 3,
-        "format": "%d3 %C%c4 %s[St,Dr,Ave]."
+        "format": "%d3 %C%c4 %s[St,Dr,Ave]"
     },
     "City": {
         "privacyLevel": 3,
@@ -28,7 +28,7 @@
     },
     "PostalCode": {
         "privacyLevel": 3,
-        "format": "%C%d%C %d%C%d"
+        "format": "%C%d%C%d%C%d"
     },
     "DateOfBirth": {
         "privacyLevel": 2,
@@ -40,11 +40,11 @@
     },
     "PhoneNumber": {
         "privacyLevel": 3,
-        "format": "(%d3)-%d3-%d4"
+        "format": "%d10"
     },
     "SIN": {
         "privacyLevel": 4,
-        "format": "%d3 %d3 %d3"
+        "format": "%d9"
     },
     "CreditCard": {
         "privacyLevel": 5,

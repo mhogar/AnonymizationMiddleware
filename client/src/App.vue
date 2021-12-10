@@ -47,18 +47,43 @@
     </div>
     <Alert ref="alert" />
     <div class="ui divider"></div>
-    <LoadingSegment v-if="users" :isLoading="usersQueryLoading">
+    <LoadingSegment v-if="users" :isLoading="usersQueryLoading" id="results">
         <TabMenu :tabs="tabs" @selected-tab-changed="selectedTabChanged" />
         <div v-if="selectedTab === 'Raw'" class="ui padded raw text segment">
             <pre>{{ usersRaw }}</pre>
         </div>
-        <div v-else-if="selectedTab === 'Parsed'" class="ui stackable two column grid">
-            <div v-for="user in usersParsed" :key="user.ID" class="column">
-                <div class="ui fluid parsed text card">
+        <div v-else-if="selectedTab === 'Formatted'" class="ui stackable two column grid">
+            <div v-for="user in usersFormatted" :key="user.ID" class="column">
+                <div class="ui fluid formatted text card">
                     <div class="content">
-                        <div class="header">{{user.FirstName}} {{user.LastName}}</div>
-                        <div class="meta">{{user.Email}}</div>
+                        <div class="header">
+                            {{scrubbedSymbol(user.FirstName, user.LastName)}}
+                            {{user.FirstName.value}} {{user.LastName.value}}
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="ui sub header">General</div>
                         <div class="description">
+                            <p><b>{{scrubbedSymbol(user.Gender)}}Gender: </b>{{user.Gender.value}}</p>
+                            <p><b>{{scrubbedSymbol(user.Gender)}}Date of Birth: </b>{{user.DateOfBirth.value}}</p>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="ui sub header">Contact</div>
+                        <div class="description">
+                            <p><b>{{scrubbedSymbol(user.Email)}}Email: </b>{{user.Email.value}}</p>
+                            <p><b>{{scrubbedSymbol(user.PhoneNumber)}}Phone Number: </b>{{user.PhoneNumber.value}}</p>
+                            <p>
+                                <b>{{scrubbedSymbol(user.Street, user.City, user.Province, user.PostalCode)}}Address: </b>
+                                {{user.Street.value}}, {{user.City.value}} {{user.Province.value}}, {{user.PostalCode.value}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="ui sub header">Financial</div>
+                        <div class="description">
+                            <p><b>{{scrubbedSymbol(user.SIN)}}SIN: </b>{{user.SIN.value}}</p>
+                            <p><b>{{scrubbedSymbol(user.CreditCard)}}Credit Card: </b>{{user.CreditCard.value}}</p>
                         </div>
                     </div>
                 </div>
@@ -75,10 +100,12 @@ import Alert from './components/Alert.vue'
 import TabMenu from './components/TabMenu.vue'
 import LoadingSegment from './components/LoadingSegment.vue'
 
+import formatUser from './helpers/formatUser'
+
 export default {
     data() {
         return {
-            tabs: ['Raw', 'Parsed'],
+            tabs: ['Raw', 'Formatted'],
             selectedTab: '',
             privacyLevelLoading: false,
             privacyLevel: 0,
@@ -98,14 +125,8 @@ export default {
         usersRaw() {
             return JSON.stringify(this.users, null, 4)
         },
-        usersParsed() {
-            return this.users.map(user => {
-                let parsedUser = {}
-                for (const [key, val] of Object.entries(user)) {
-                    parsedUser[key] = val.substring(val.indexOf('*') + 1)
-                }
-                return parsedUser
-            })
+        usersFormatted() {
+            return this.users.map(user => formatUser(Object.assign({}, user)))
         },
         canSearch() {
             return !this.usersQueryLoading && this.queryValue !== ''
@@ -115,6 +136,9 @@ export default {
         }
     },
     methods: {
+        scrubbedSymbol(...fields) {
+            return fields.find(field => field.scrubbed) != null ? '*' : ''
+        },
         setAlert(text) {
             this.$refs.alert.setAlert({
                 type: 'negative',
@@ -221,9 +245,15 @@ body {
     font-weight: bolder;
     font-size: 20px;
     line-height: 30px;
+    background-color: aliceblue;
 }
 
-.ui.parsed.text.card {
+.ui.formatted.text.card {
     font-size: larger;
+    background-color: aliceblue;
+}
+
+#results {
+    padding-bottom: 5rem;
 }
 </style>
