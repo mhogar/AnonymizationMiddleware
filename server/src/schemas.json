@@ -35,7 +35,7 @@
         "format": "%d[1950-2020]-%d[1-12]-%d[1-31]"
     },
     "Gender": {
-        "privacyLevel": 1,
+        "privacyLevel": 2,
         "format": "%s[M,F,O]"
     },
     "PhoneNumber": {
