@@ -1,24 +1,16 @@
-# final-project
+# Anonymization Middleware
 
-## Project setup
-```
-npm install
-```
+## Dependencies
+- [Node.js](https://nodejs.org/en/)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Setup and Running
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Server
+- `cd` into server
+- run `npm install` (one time setup)
+- run `npm run start` to start the backend server
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Client
+- `cd` into client
+- run `npm install` (one time setup)
+- run `npm run server` to start the frontend development server
